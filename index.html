@@ -1,2 +1,211 @@
-<!doctype html><meta charset="utf-8"><title>It works</title>
-<h1>GitHub Pages is live</h1>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Crypto Analytics — Free Power BI + CoinGecko</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Tailwind Play CDN (no build step) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .glass { background: rgba(255,255,255,0.08); backdrop-filter: blur(10px); }
+    .shadow-soft { box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+    .bg-grad { background: radial-gradient(1200px 600px at 10% -10%, #0ea5e930 0%, transparent 60%), radial-gradient(900px 500px at 110% 10%, #22c55e30 0%, transparent 60%), linear-gradient(180deg, #0b1220 0%, #0b1220 100%); }
+  </style>
+</head>
+<body class="min-h-screen text-slate-100 bg-grad">
+
+  <!-- Nav -->
+  <header class="sticky top-0 z-40 bg-slate-900/70 backdrop-blur border-b border-white/10">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="h-6 w-6 rounded-full bg-emerald-400/90"></div>
+        <span class="text-sm font-semibold tracking-wide">Crypto Analytics</span>
+      </div>
+      <nav class="hidden md:flex items-center gap-6 text-sm">
+        <a href="#dashboard" class="hover:text-white/90 text-white/70">Dashboard</a>
+        <a href="#about" class="hover:text-white/90 text-white/70">About</a>
+        <a href="#contact" class="hover:text-white/90 text-white/70">Contact</a>
+      </nav>
+      <a href="#dashboard" class="text-xs font-semibold px-3 py-1.5 rounded-md bg-emerald-500 hover:bg-emerald-400 text-slate-900">Launch</a>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="relative">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+      <div class="grid md:grid-cols-2 gap-10 items-center">
+        <div>
+          <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight">
+            Live Crypto Insights powered by CoinGecko and Power BI
+          </h1>
+          <p class="mt-5 text-white/70 max-w-xl">
+            A fully free, public dashboard. Switch coins, change date ranges, and explore market cap, volume, and performance with a modern, responsive UI.
+          </p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a href="#dashboard" class="px-4 py-2.5 text-sm font-semibold rounded-md bg-emerald-500 hover:bg-emerald-400 text-slate-900">Open Dashboard</a>
+            <a href="#about" class="px-4 py-2.5 text-sm font-semibold rounded-md border border-white/20 hover:border-white/40 text-white/80">How it works</a>
+          </div>
+        </div>
+        <div class="glass rounded-2xl p-6 shadow-soft border border-white/10">
+          <div class="text-sm text-white/80">What’s inside</div>
+          <ul class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3 text-white/80 text-sm">
+            <li class="rounded-lg border border-white/10 p-3">KPI cards and top movers</li>
+            <li class="rounded-lg border border-white/10 p-3">90-day price trends</li>
+            <li class="rounded-lg border border-white/10 p-3">Market cap share</li>
+            <li class="rounded-lg border border-white/10 p-3">Volume vs change scatter</li>
+          </ul>
+          <div class="mt-4 text-xs text-white/60">Data: CoinGecko • Embedding: Power BI Publish to web</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Controls + Embed -->
+  <section id="dashboard" class="py-8 md:py-12">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <!-- Controls Card -->
+      <div class="glass rounded-2xl border border-white/10 p-5 md:p-6 shadow-soft">
+        <div class="flex flex-col lg:flex-row gap-4 lg:items-center lg:justify-between">
+          <!-- Coin group -->
+          <div>
+            <div class="text-xs uppercase tracking-wider text-white/60">Coin</div>
+            <div id="coin-buttons" class="mt-2 flex flex-wrap gap-2">
+              <button data-coin="BTC" class="px-3 py-1.5 text-sm rounded-md border border-white/15 bg-white/5 hover:bg-white/10 active:scale-[.99] coin-btn ring-1 ring-transparent">BTC</button>
+              <button data-coin="ETH" class="px-3 py-1.5 text-sm rounded-md border border-white/15 bg-white/5 hover:bg-white/10 coin-btn">ETH</button>
+              <button data-coin="SOL" class="px-3 py-1.5 text-sm rounded-md border border-white/15 bg-white/5 hover:bg-white/10 coin-btn">SOL</button>
+            </div>
+          </div>
+
+          <!-- Range -->
+          <div>
+            <div class="text-xs uppercase tracking-wider text-white/60">Date range (history view)</div>
+            <select id="range" class="mt-2 text-sm bg-white/5 border border-white/15 rounded-md px-3 py-2">
+              <option value="7">Last 7 days</option>
+              <option value="30" selected>Last 30 days</option>
+              <option value="90">Last 90 days</option>
+            </select>
+          </div>
+
+          <!-- Page -->
+          <div>
+            <div class="text-xs uppercase tracking-wider text-white/60">View</div>
+            <select id="page" class="mt-2 text-sm bg-white/5 border border-white/15 rounded-md px-3 py-2">
+              <option value="ReportSection">KPI & Top Movers</option>
+              <option value="ReportSection2">History Lines</option>
+              <option value="ReportSection3">Volume vs Change</option>
+            </select>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex items-center gap-2">
+            <button id="reset" class="px-3 py-2 text-sm rounded-md border border-white/15 bg-white/5 hover:bg-white/10">Reset</button>
+            <button id="live" class="px-3 py-2 text-sm rounded-md bg-emerald-500 hover:bg-emerald-400 text-slate-900">Live BTC</button>
+            <span id="now" class="text-sm text-white/80"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Embed Card -->
+      <div class="mt-6 glass rounded-2xl border border-white/10 p-2 shadow-soft">
+        <div class="aspect-[16/9] w-full overflow-hidden rounded-xl border border-white/10">
+          <iframe id="pbi" class="w-full h-full" src="EMBED_URL_HERE" allowfullscreen></iframe>
+        </div>
+        <div class="p-3 text-xs text-white/60">Tip: switch View to “History Lines” to apply the coin/date filters.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="py-16">
+    <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+      <h2 class="text-2xl md:text-3xl font-bold">How this stays free</h2>
+      <p class="mt-4 text-white/75">
+        Data comes from CoinGecko (no API key). Power BI uses the Web connector and Publish to web. Hosting is on a free static host (GitHub Pages, Netlify, or Vercel). You can duplicate this page, swap the embed URL, and go live.
+      </p>
+    </div>
+  </section>
+
+  <!-- Contact / Footer -->
+  <footer id="contact" class="border-t border-white/10">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 text-sm text-white/70">
+      <div>© <span id="y"></span> Crypto Analytics. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script>
+    // === CONFIG: set these after you publish your report ===
+    const EMBED_URL = "EMBED_URL_HERE";   // Power BI "Publish to web" view URL
+    const F_COIN = "Rates/Coin";          // model table/column for coin
+    const F_DATE = "Rates/Date";          // model table/column for date
+    // ==============================================
+
+    const iframe = document.getElementById("pbi");
+    const coinButtons = [...document.querySelectorAll(".coin-btn")];
+    const rangeSel = document.getElementById("range");
+    const pageSel = document.getElementById("page");
+    const resetBtn = document.getElementById("reset");
+    const liveBtn = document.getElementById("live");
+    const nowSpan = document.getElementById("now");
+    document.getElementById("y").textContent = new Date().getFullYear();
+
+    function addParam(url, key, val) {
+      const sep = url.includes("?") ? "&" : "?";
+      return url + sep + encodeURIComponent(key) + "=" + encodeURIComponent(val);
+    }
+    function activeCoin() {
+      const a = coinButtons.find(b => b.classList.contains("ring-emerald-400"));
+      return a ? a.dataset.coin : "BTC";
+    }
+    function buildFilter(pageName) {
+      if (pageName !== "ReportSection2") return "";
+      const coin = activeCoin();
+      const days = +rangeSel.value;
+      const now = new Date();
+      const start = new Date(now); start.setDate(start.getDate() - days);
+      const iso = `${start.getFullYear()}-${String(start.getMonth()+1).padStart(2,"0")}-${String(start.getDate()).padStart(2,"0")}T00:00:00`;
+      return `${F_COIN} eq '${coin}' and ${F_DATE} ge datetime'${iso}'`;
+    }
+    function updateEmbed() {
+      const pageName = pageSel.value;
+      let url = EMBED_URL;
+      url = addParam(url, "pageName", pageName);
+      const filter = buildFilter(pageName);
+      if (filter) url = addParam(url, "filter", filter);
+      url = addParam(url, "_ts", Date.now()); // cache-buster
+      iframe.src = url;
+    }
+
+    coinButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        coinButtons.forEach(b => b.classList.remove("ring-emerald-400","ring-2"));
+        btn.classList.add("ring-emerald-400","ring-2");
+        updateEmbed();
+      });
+    });
+    // Set BTC active by default
+    coinButtons[0].classList.add("ring-emerald-400","ring-2");
+
+    rangeSel.addEventListener("change", updateEmbed);
+    pageSel.addEventListener("change", updateEmbed);
+    resetBtn.addEventListener("click", () => {
+      coinButtons.forEach(b => b.classList.remove("ring-emerald-400","ring-2"));
+      coinButtons[0].classList.add("ring-emerald-400","ring-2");
+      rangeSel.value = "30";
+      pageSel.value = "ReportSection";
+      iframe.src = EMBED_URL;
+    });
+
+    // Optional: Live price badge (free, no key)
+    liveBtn.addEventListener("click", async () => {
+      nowSpan.textContent = "Loading…";
+      try {
+        const r = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd");
+        const j = await r.json();
+        nowSpan.textContent = j.bitcoin ? `$${j.bitcoin.usd.toLocaleString()}` : "—";
+      } catch {
+        nowSpan.textContent = "—";
+      }
+    });
+  </script>
+</body>
+</html>
