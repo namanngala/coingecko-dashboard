@@ -42,7 +42,7 @@
             Live Crypto Insights powered by CoinGecko and Power BI
           </h1>
           <p class="mt-5 text-white/70 max-w-xl">
-            A fully free, public dashboard. Switch coins, change date ranges, and explore market cap, volume, and performance with a modern, responsive UI.
+            A fully free, public dashboard. Switch coins, explore trends, and see market performance with a modern, responsive UI.
           </p>
           <div class="mt-8 flex flex-wrap gap-3">
             <a href="#dashboard" class="px-4 py-2.5 text-sm font-semibold rounded-md bg-emerald-500 hover:bg-emerald-400 text-slate-900">Open Dashboard</a>
@@ -69,28 +69,11 @@
       <!-- Controls -->
       <div class="glass rounded-2xl border border-white/10 p-5 md:p-6 shadow-soft">
         <div class="flex flex-col lg:flex-row gap-4 lg:items-center lg:justify-between">
-          <div>
-            <div class="text-xs uppercase tracking-wider text-white/60">Coin</div>
-            <div id="coin-buttons" class="mt-2 flex flex-wrap gap-2">
-              <button data-coin="BTC" class="px-3 py-1.5 text-sm rounded-md border border-white/15 bg-white/5 hover:bg-white/10 active:scale-[.99] coin-btn ring-1 ring-transparent">BTC</button>
-              <button data-coin="ETH" class="px-3 py-1.5 text-sm rounded-md border border-white/15 bg-white/5 hover:bg-white/10 coin-btn">ETH</button>
-              <button data-coin="SOL" class="px-3 py-1.5 text-sm rounded-md border border-white/15 bg-white/5 hover:bg-white/10 coin-btn">SOL</button>
-            </div>
-          </div>
-
-          <div>
-            <div class="text-xs uppercase tracking-wider text-white/60">Date range</div>
-            <select id="range" class="mt-2 text-sm bg-white/5 border border-white/15 rounded-md px-3 py-2">
-              <option value="7">Last 7 days</option>
-              <option value="30" selected>Last 30 days</option>
-              <option value="90">Last 90 days</option>
-            </select>
-          </div>
 
           <div>
             <div class="text-xs uppercase tracking-wider text-white/60">View</div>
             <select id="page" class="mt-2 text-sm bg-white/5 border border-white/15 rounded-md px-3 py-2">
-              <option value="https://app.powerbi.com/view?r=eyJrIjoiODI2OTVkMTQtMzllYy00NjE4LThiZDAtMzVlMDVjNWYzYzExIiwidCI6IjY4ZDQ1MzNjLWVhZTYtNDgzMy05OWNjLTdhOTcwNGFjODcwYiIsImMiOjZ9">KPI & Top Movers</option>
+              <option value="https://app.powerbi.com/view?r=eyJrIjoiODI2OTVkMTQtMzllYy00NjE4LThiZDAtMzVlMDVjNWYzYzExIiwidCI6IjY4ZDQ1MzNjLWVhZTYtNDgzMy05OWNjLTdhOTcwNGFjODcwYiIsImMiOjZ9">KPI &amp; Top Movers</option>
               <option value="https://app.powerbi.com/view?r=eyJrIjoiNDAzY2E4MDItZjdjOS00NTc0LTg5NmUtZGI2ZDgwYjI0MmIzIiwidCI6IjY4ZDQ1MzNjLWVhZTYtNDgzMy05OWNjLTdhOTcwNGFjODcwYiIsImMiOjZ9">Historical Trends</option>
               <option value="https://app.powerbi.com/view?r=eyJrIjoiYTY3OTBkN2MtN2M1MS00NjU5LTljOTItOTQ5ZjlmODg0MzQwIiwidCI6IjY4ZDQ1MzNjLWVhZTYtNDgzMy05OWNjLTdhOTcwNGFjODcwYiIsImMiOjZ9">Volume vs Change</option>
             </select>
@@ -98,9 +81,19 @@
 
           <div class="flex items-center gap-2">
             <button id="reset" class="px-3 py-2 text-sm rounded-md border border-white/15 bg-white/5 hover:bg-white/10">Reset</button>
-            <button id="live" class="px-3 py-2 text-sm rounded-md bg-emerald-500 hover:bg-emerald-400 text-slate-900">Live BTC</button>
+
+            <select id="live-coin" class="text-sm bg-white/5 border border-white/15 rounded-md px-3 py-2">
+              <option value="bitcoin" selected>BTC</option>
+              <option value="ethereum">ETH</option>
+              <option value="solana">SOL</option>
+            </select>
+
+            <button id="live" class="px-3 py-2 text-sm rounded-md bg-emerald-500 hover:bg-emerald-400 text-slate-900">
+              Show Live Price
+            </button>
             <span id="now" class="text-sm text-white/80"></span>
           </div>
+
         </div>
       </div>
 
@@ -111,7 +104,7 @@
             src="https://app.powerbi.com/view?r=eyJrIjoiODI2OTVkMTQtMzllYy00NjE4LThiZDAtMzVlMDVjNWYzYzExIiwidCI6IjY4ZDQ1MzNjLWVhZTYtNDgzMy05OWNjLTdhOTcwNGFjODcwYiIsImMiOjZ9"
             allowfullscreen></iframe>
         </div>
-        <div class="p-3 text-xs text-white/60">Tip: switch View to “Historical Trends” to see time-range filters.</div>
+        <div class="p-3 text-xs text-white/60">Tip: switch View to see different Power BI dashboards.</div>
       </div>
     </div>
   </section>
@@ -137,23 +130,36 @@
     const iframe = document.getElementById("pbi");
     const pageSel = document.getElementById("page");
     const liveBtn = document.getElementById("live");
+    const liveCoinSel = document.getElementById("live-coin");
     const nowSpan = document.getElementById("now");
     document.getElementById("y").textContent = new Date().getFullYear();
 
-    pageSel.addEventListener("change", () => { iframe.src = pageSel.value; });
-    document.getElementById("reset").addEventListener("click", () => {
-      pageSel.value = pageSel.options[0].value;
+    // Change Power BI page
+    pageSel.addEventListener("change", () => {
       iframe.src = pageSel.value;
     });
 
-    // Live BTC fetch from CoinGecko
+    // Reset view
+    document.getElementById("reset").addEventListener("click", () => {
+      pageSel.value = pageSel.options[0].value;
+      iframe.src = pageSel.value;
+      liveCoinSel.value = "bitcoin";
+      nowSpan.textContent = "";
+    });
+
+    // Live-price fetcher
     liveBtn.addEventListener("click", async () => {
+      const coin = liveCoinSel.value;
       nowSpan.textContent = "Loading…";
       try {
-        const r = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd");
+        const url = `https://api.coingecko.com/api/v3/simple/price?ids=${coin}&vs_currencies=usd`;
+        const r = await fetch(url);
         const j = await r.json();
-        nowSpan.textContent = j.bitcoin ? `$${j.bitcoin.usd.toLocaleString()}` : "—";
-      } catch { nowSpan.textContent = "—"; }
+        const price = j[coin]?.usd;
+        nowSpan.textContent = price ? `$${price.toLocaleString()}` : "—";
+      } catch {
+        nowSpan.textContent = "—";
+      }
     });
   </script>
 </body>
