@@ -108,7 +108,7 @@
       <!-- Embed Card -->
       <div class="mt-6 glass rounded-2xl border border-white/10 p-2 shadow-soft">
         <div class="aspect-[16/9] w-full overflow-hidden rounded-xl border border-white/10">
-          <iframe id="pbi" class="w-full h-full" src="EMBED_URL_HERE" allowfullscreen></iframe>
+          <iframe id="pbi" class="w-full h-full" src="" allowfullscreen></iframe>
         </div>
         <div class="p-3 text-xs text-white/60">Tip: switch View to “History Lines” to apply the coin/date filters.</div>
       </div>
@@ -133,12 +133,11 @@
   </footer>
 
   <script>
-    // === CONFIG: set these after you publish your report ===
-    const EMBED_URL = "EMBED_URL_HERE";   // Power BI "Publish to web" view URL
-    const F_COIN = "Rates/Coin";          // model table/column for coin
-    const F_DATE = "Rates/Date";          // model table/column for date
+    // === CONFIG: Power BI embed URL ===
+    const EMBED_URL = "https://app.powerbi.com/view?r=eyJrIjoiYTY3OTBkN2MtN2M1MS00NjU5LTljOTItOTQ5ZjlmODg0MzQwIiwidCI6IjY4ZDQ1MzNjLWVhZTYtNDgzMy05OWNjLTdhOTcwNGFjODcwYiIsImMiOjZ9";
+    const F_COIN = "Rates/Coin";
+    const F_DATE = "Rates/Date";
     // ==============================================
-
     const iframe = document.getElementById("pbi");
     const coinButtons = [...document.querySelectorAll(".coin-btn")];
     const rangeSel = document.getElementById("range");
@@ -171,10 +170,9 @@
       url = addParam(url, "pageName", pageName);
       const filter = buildFilter(pageName);
       if (filter) url = addParam(url, "filter", filter);
-      url = addParam(url, "_ts", Date.now()); // cache-buster
+      url = addParam(url, "_ts", Date.now());
       iframe.src = url;
     }
-
     coinButtons.forEach(btn => {
       btn.addEventListener("click", () => {
         coinButtons.forEach(b => b.classList.remove("ring-emerald-400","ring-2"));
@@ -182,9 +180,7 @@
         updateEmbed();
       });
     });
-    // Set BTC active by default
     coinButtons[0].classList.add("ring-emerald-400","ring-2");
-
     rangeSel.addEventListener("change", updateEmbed);
     pageSel.addEventListener("change", updateEmbed);
     resetBtn.addEventListener("click", () => {
@@ -194,17 +190,19 @@
       pageSel.value = "ReportSection";
       iframe.src = EMBED_URL;
     });
-
-    // Optional: Live price badge (free, no key)
     liveBtn.addEventListener("click", async () => {
       nowSpan.textContent = "Loading…";
       try {
         const r = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd");
         const j = await r.json();
         nowSpan.textContent = j.bitcoin ? `$${j.bitcoin.usd.toLocaleString()}` : "—";
-      } catch {
-        nowSpan.textContent = "—";
-      }
+      } catch { nowSpan.textContent = "—"; }
+    });
+
+    // Load default view on start
+    document.addEventListener("DOMContentLoaded", () => {
+      pageSel.value = "ReportSection";
+      updateEmbed();
     });
   </script>
 </body>
